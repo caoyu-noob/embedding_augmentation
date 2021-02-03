@@ -1,0 +1,23 @@
+CUDA_VISIBLE_DEVICES=0 python train.py \
+--train_batch_size 256 \
+--batch_split 8 \
+--n_epochs 50 \
+--lr 2e-4 \
+--train_datasets datasets/personachat/dummy.txt \
+--valid_datasets datasets/personachat/dummy.txt \
+--test_datasets datasets/personachat/dummy.txt \
+--train_datasets_cache datasets/personachat/dummy_seq2seq_cache \
+--valid_datasets_cache datasets/personachat/dummy_seq2seq_cache \
+--test_datasets_cache datasets/personachat/dummy_seq2seq_cache \
+--vocab_path datasets/vocab/dummy_vocab.bin \
+--data_type persona \
+--model_type seq2seq \
+--pointer_gen \
+--s2s_weight 1 \
+--max_history_size 5 \
+--mixup \
+--mixup_model_path ./fasttext_model/persona_50_cbow.bin \
+--mixup_ratio 0.4 \
+--mixup_cache datasets/personachat/dummy_mixup_cache_seq2seq_th0.4 \
+--mixup_candidate_th 0.4 \
+--mixup_soft_loss_weight 1 \
