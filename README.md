@@ -2,7 +2,7 @@
 
 Implementation for ICASSP 2021 paper 
 
-**"Towards Efficiently Diversifying Dialogue Generation via Embedding Augmentation"
+**Towards Efficiently Diversifying Dialogue Generation via Embedding Augmentation**
 
 ### Requirements
 
@@ -44,5 +44,5 @@ Please take the descriptions in `config.py` as a reference.
 Before formally running the experiment, you can try `run_dummy.sh` for testing.
 
 We also provide a example shell script `train_persona.sh` to run the training using Transformer with embedding 
-augmentation on PersonaChat dataset or `train_dialog.sh` to run the training on DailyDialog dataset.
+augmentation on PersonaChat dataset or `train_dailydialog.sh` to run the training on DailyDialog dataset.
 

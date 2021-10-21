@@ -66,6 +66,9 @@ class Seq2seqVocab:
                 extra_data = self._parse_data(extra_train_data_path, None, None, extra_data_type)
                 self.all_data.extend(extra_data)
             self.parse_vocab(self.all_data, self.vocab)
+            root_path = os.path.split(vocab_path)[0]
+            if not os.path.exists(root_path):
+                os.mkdir(root_path)
             with open(vocab_path, 'wb') as f:
                 pickle.dump([self.vocab, []], f)
 

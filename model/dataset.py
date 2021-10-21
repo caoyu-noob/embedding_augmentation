@@ -24,8 +24,6 @@ import fasttext
 import torch
 from torch.utils.data import Dataset
 from tqdm import tqdm
-from transformers.tokenization_gpt2 import GPT2Tokenizer
-from transformers.tokenization_openai import OpenAIGPTTokenizer
 
 from model.seq2seq_vocab import Seq2seqTokenizer
 
@@ -125,19 +123,6 @@ class FacebookDataset(Dataset):
 
         return dataset
 
-    @staticmethod
-    def make_proto_dataset(data, vocab):
-        dataset = []
-        if isinstance(vocab, OpenAIGPTTokenizer) or isinstance(vocab, GPT2Tokenizer) or isinstance(vocab,
-                                                                                                   Seq2seqTokenizer):
-            for chat in tqdm(data):
-                query = vocab.encode(vocab.tokenize(chat['dialog'][0]))
-                response = vocab.encode(vocab.tokenize(chat['dialog'][1]))
-                insert_tokens = set(response) - set(query)
-                delete_tokens = set(query) - set(response)
-                dataset.append(([list(insert_tokens), list(delete_tokens)], [query, response], []))
-        return dataset
-
     def __init__(self, paths, vocab, *, max_lengths=512,  max_y_length=80, min_infos=2, dialog_embeddings=False,
                  use_start_end=True, limit_size=-1,
                  cache=None, augment=False, aug_syn_proba=0.1, aug_vary_length=True, max_history_size=-1,
@@ -166,13 +151,6 @@ class FacebookDataset(Dataset):
             self.data = torch.load(cache)
         else:
             self.data = self._parse_data(paths, vocab, data_type, parsed_data)
-            if extra_train_path is not None:
-                extra_data = self._parse_data([extra_train_path], vocab, extra_data_type, None)
-                self.data.extend(extra_data)
-            if extra_cvae_utterances_path is not None:
-                with open(extra_cvae_utterances_path, 'r') as f:
-                    cvae_utterances = json.load(f)
-                self._extend_cvae_utterances(cvae_utterances)
             if cache:
                 torch.save(self.data, cache)
 
@@ -194,18 +172,6 @@ class FacebookDataset(Dataset):
 
     def __len__(self):
         return len(self.data)
-
-    def _extend_cvae_utterances(self, cvae_utterances):
-        for i, utterance_pair in enumerate(cvae_utterances):
-            if isinstance(self.vocab, OpenAIGPTTokenizer) or isinstance(self.vocab, GPT2Tokenizer) or \
-                isinstance(self.vocab, Seq2seqTokenizer):
-                q = self.vocab.encode(self.vocab.tokenize(utterance_pair[0]))
-                r = self.vocab.encode(self.vocab.tokenize(utterance_pair[1]))
-            else:
-                q = self.vocab.string2ids(utterance_pair[0])
-                r = self.vocab.string2ids(utterance_pair[1])
-            cur_data = (self.data[i][0], self.data[i][1][:-2] + [q, r], self.data[i][2])
-            self.data.append(cur_data)
 
     def _parse_data(self, paths, vocab, data_type, parsed_data):
         data = None
