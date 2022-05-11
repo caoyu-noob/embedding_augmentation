@@ -24,9 +24,10 @@ DailyDialog: Download it from [this site](http://yanran.li/dailydialog). Unzip i
 new files, `train_data.txt`, `valid_data.txt`, and `test_data.txt`, whose format can be recognized by our scripts. 
 
 You also need to download the 6B [GLoVe embedding vectors](http://nlp.stanford.edu/data/glove.6B.zip), unzip it and put 
-the 300d file under `./glove`
+the 300d file under `./glove`.
 
-Perl is needed, 
+To obtain the automatic metrics, you also need to install java-1.8.0, perl and related perl library including 
+XML::Twig, Sort::Naturally, String::Util (I use cpanm to install them on Linux).
 
 To calculate METEOR metrics, you need to download the [software package](https://www.cs.cmu.edu/~alavie/METEOR/) and 
 extract it under `./metrics/`. If you do not need it, you can comment L626 in `./metrics.py`
